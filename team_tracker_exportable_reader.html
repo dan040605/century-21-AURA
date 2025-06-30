@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Seguimiento de Equipo</title>
+    <script src="https://cdn.tailwindcss.com">
+function exportarCSV() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const filas = members.map(m => [
+        `"${m.nombre}"`, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ].join(','));
+
+    const csvContent = [encabezados.join(','), ...filas].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'seguimiento_equipo.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+
+function abrirModoLector() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const rows = members.map(m => [
+        m.nombre, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ]);
+
+    const tableHTML = `
+        <html>
+        <head>
+            <title>Vista de Datos - Solo Lectura</title>
+            <style>
+                body { font-family: sans-serif; padding: 2rem; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                th { background-color: #f0f0f0; }
+            </style>
+        </head>
+        <body>
+            <h2>Vista de Datos del Equipo</h2>
+            <table>
+                <thead><tr>${encabezados.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(r => `<tr>${r.map(d => `<td>${d}</td>`).join('')}</tr>`).join('')}</tbody>
+            </table>
+        </body>
+        </html>
+    `;
+    const newWin = window.open();
+    newWin.document.write(tableHTML);
+    newWin.document.close();
+}
+
+function abrirModoEditable() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const rows = members.map(m => [
+        m.nombre, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ]);
+
+    const tableHTML = `
+        <html>
+        <head>
+            <title>Modo Editable - Seguimiento de Equipo</title>
+            <style>
+                body { font-family: sans-serif; padding: 2rem; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                th { background-color: #e0f7fa; }
+                input { width: 100%; border: none; text-align: center; }
+            </style>
+        </head>
+        <body>
+            <h2>Modo Editable</h2>
+            <table>
+                <thead><tr>${encabezados.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(r => `<tr>${r.map(d => `<td><input value="${d}"></td>`).join('')}</tr>`).join('')}</tbody>
+            </table>
+        </body>
+        </html>
+    `;
+    const newWin = window.open();
+    newWin.document.write(tableHTML);
+    newWin.document.close();
+}
+
+
+function verModoLectura() {
+    let ventana = window.open('', '_blank');
+    let tabla = '<table border="1" style="width:100%; border-collapse:collapse; font-family:sans-serif; font-size:14px;">';
+    tabla += `<thead><tr>
+        <th>Nombre</th><th>Ingreso</th><th>Fecha Pago</th><th>Madurez</th><th>Lados/Mes</th>
+        <th>Marzo</th><th>Abril</th><th>Mayo</th><th>Junio</th>
+        <th>Captaciones</th><th>Exclusiva</th><th>Abiertos</th>
+        <th>L. Colocación</th><th>L. Captación</th>
+    </tr></thead><tbody>`;
+
+    members.forEach(m => {
+        tabla += `<tr>
+            <td>${m.nombre}</td>
+            <td>${m.ingreso}</td>
+            <td>${m.fechaPago}</td>
+            <td>${m.maduresParaTarea}</td>
+            <td>${m.ladosPorMes}</td>
+            <td>${m.marzo}</td>
+            <td>${m.abril}</td>
+            <td>${m.mayo}</td>
+            <td>${m.junio}</td>
+            <td>${m.captaciones}</td>
+            <td>${m.exclusiva}</td>
+            <td>${m.abiertos}</td>
+            <td>${m.ladosColocacion}</td>
+            <td>${m.ladosCaptacion}</td>
+        </tr>`;
+    });
+
+    tabla += '</tbody></table>';
+
+    ventana.document.write(`<html><head><title>Modo Lector</title></head><body><h2>Vista de Datos del Equipo</h2>${tabla}</body></html>`);
+    ventana.document.close();
+}
+
+</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js">
+function exportarCSV() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const filas = members.map(m => [
+        `"${m.nombre}"`, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ].join(','));
+
+    const csvContent = [encabezados.join(','), ...filas].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'seguimiento_equipo.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+
+function abrirModoLector() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const rows = members.map(m => [
+        m.nombre, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ]);
+
+    const tableHTML = `
+        <html>
+        <head>
+            <title>Vista de Datos - Solo Lectura</title>
+            <style>
+                body { font-family: sans-serif; padding: 2rem; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                th { background-color: #f0f0f0; }
+            </style>
+        </head>
+        <body>
+            <h2>Vista de Datos del Equipo</h2>
+            <table>
+                <thead><tr>${encabezados.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(r => `<tr>${r.map(d => `<td>${d}</td>`).join('')}</tr>`).join('')}</tbody>
+            </table>
+        </body>
+        </html>
+    `;
+    const newWin = window.open();
+    newWin.document.write(tableHTML);
+    newWin.document.close();
+}
+
+function abrirModoEditable() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const rows = members.map(m => [
+        m.nombre, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ]);
+
+    const tableHTML = `
+        <html>
+        <head>
+            <title>Modo Editable - Seguimiento de Equipo</title>
+            <style>
+                body { font-family: sans-serif; padding: 2rem; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                th { background-color: #e0f7fa; }
+                input { width: 100%; border: none; text-align: center; }
+            </style>
+        </head>
+        <body>
+            <h2>Modo Editable</h2>
+            <table>
+                <thead><tr>${encabezados.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(r => `<tr>${r.map(d => `<td><input value="${d}"></td>`).join('')}</tr>`).join('')}</tbody>
+            </table>
+        </body>
+        </html>
+    `;
+    const newWin = window.open();
+    newWin.document.write(tableHTML);
+    newWin.document.close();
+}
+
+
+function verModoLectura() {
+    let ventana = window.open('', '_blank');
+    let tabla = '<table border="1" style="width:100%; border-collapse:collapse; font-family:sans-serif; font-size:14px;">';
+    tabla += `<thead><tr>
+        <th>Nombre</th><th>Ingreso</th><th>Fecha Pago</th><th>Madurez</th><th>Lados/Mes</th>
+        <th>Marzo</th><th>Abril</th><th>Mayo</th><th>Junio</th>
+        <th>Captaciones</th><th>Exclusiva</th><th>Abiertos</th>
+        <th>L. Colocación</th><th>L. Captación</th>
+    </tr></thead><tbody>`;
+
+    members.forEach(m => {
+        tabla += `<tr>
+            <td>${m.nombre}</td>
+            <td>${m.ingreso}</td>
+            <td>${m.fechaPago}</td>
+            <td>${m.maduresParaTarea}</td>
+            <td>${m.ladosPorMes}</td>
+            <td>${m.marzo}</td>
+            <td>${m.abril}</td>
+            <td>${m.mayo}</td>
+            <td>${m.junio}</td>
+            <td>${m.captaciones}</td>
+            <td>${m.exclusiva}</td>
+            <td>${m.abiertos}</td>
+            <td>${m.ladosColocacion}</td>
+            <td>${m.ladosCaptacion}</td>
+        </tr>`;
+    });
+
+    tabla += '</tbody></table>';
+
+    ventana.document.write(`<html><head><title>Modo Lector</title></head><body><h2>Vista de Datos del Equipo</h2>${tabla}</body></html>`);
+    ventana.document.close();
+}
+
+</script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+        }
+        .header-gradient {
+            background: linear-gradient(90deg, #2563eb 0%, #4f46e5 100%);
+        }
+        .icon {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+        .icon-lg {
+            width: 32px;
+            height: 32px;
+        }
+        .editable-cell {
+            min-width: 80px;
+        }
+        .name-cell {
+            max-width: 200px;
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg">
+    <div class="min-h-screen p-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <svg class="icon-lg text-blue-600" viewBox="0 0 24 24">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <div>
+                            <h1 class="text-3xl font-bold text-gray-800">Sistema de Seguimiento de Equipo</h1>
+
+<button onclick="exportarCSV()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+    <svg class="icon" viewBox="0 0 24 24">
+        <path d="M12 5v14"></path>
+        <path d="M5 12h14"></path>
+    </svg>
+    Exportar Datos (CSV)
+</button>
+
+                            <p class="text-gray-600">Gestión completa de rendimiento y métricas</p>
+                        </div>
+                    </div>
+                    <button id="addMemberBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M5 12h14"></path>
+                            <path d="M12 5v14"></path>
+                        </svg>
+                        Agregar Miembro
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add New Member Form -->
+            <div id="addMemberForm" class="bg-white rounded-lg shadow-lg p-6 mb-6 hidden">
+                <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5v14"></path>
+                    </svg>
+                    Agregar Nuevo Miembro
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <input type="text" id="newNombre" placeholder="Nombre completo" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="date" id="newIngreso" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="date" id="newFechaPago" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="newMadures" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Control">Control</option>
+                        <option value="Delegación">Delegación</option>
+                        <option value="Seguimiento">Seguimiento</option>
+                    </select>
+                    <input type="number" id="newLadosPorMes" step="0.01" placeholder="Lados por mes" value="0.33" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex gap-2">
+                    <button id="saveNewMember" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                            <polyline points="17,21 17,13 7,13 7,21"></polyline>
+                            <polyline points="7,3 7,8 15,8"></polyline>
+                        </svg>
+                        Guardar
+                    </button>
+                    <button id="cancelNewMember" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M18 6 6 18"></path>
+                            <path d="M6 6l12 12"></path>
+                        </svg>
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Table -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead class="header-gradient text-white">
+                            <tr>
+                                <th class="p-3 text-left font-semibold">Nombre</th>
+                                <th class="p-3 text-center font-semibold">
+                                    <svg class="icon inline mr-1" viewBox="0 0 24 24">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    Ingreso
+                                </th>
+                                <th class="p-3 text-center font-semibold">
+                                    <svg class="icon inline mr-1" viewBox="0 0 24 24">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                                    </svg>
+                                    Fecha Pago
+                                </th>
+                                <th class="p-3 text-center font-semibold">Días para Pago</th>
+                                <th class="p-3 text-center font-semibold">Madurez</th>
+                                <th class="p-3 text-center font-semibold">Lados/Mes</th>
+                                <th class="p-3 text-center font-semibold bg-yellow-500">Marzo</th>
+                                <th class="p-3 text-center font-semibold bg-yellow-500">Abril</th>
+                                <th class="p-3 text-center font-semibold bg-yellow-500">Mayo</th>
+                                <th class="p-3 text-center font-semibold bg-yellow-500">Junio</th>
+                                <th class="p-3 text-center font-semibold bg-green-500">Captaciones</th>
+                                <th class="p-3 text-center font-semibold bg-green-500">Exclusiva</th>
+                                <th class="p-3 text-center font-semibold bg-green-500">Abiertos</th>
+                                <th class="p-3 text-center font-semibold bg-purple-500">L. Colocación</th>
+                                <th class="p-3 text-center font-semibold bg-purple-500">L. Captación</th>
+                                <th class="p-3 text-center font-semibold bg-red-500">Total Meses</th>
+                                <th class="p-3 text-center font-semibold bg-red-500">Total General</th>
+                                <th class="p-3 text-center font-semibold">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTableBody">
+                            <!-- Rows will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-6">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Miembros</p>
+                            <p id="totalMembers" class="text-2xl font-bold text-gray-900">0</p>
+                        </div>
+                        <svg class="icon-lg text-blue-600" viewBox="0 0 24 24">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Captaciones</p>
+                            <p id="totalCaptaciones" class="text-2xl font-bold text-green-600">0</p>
+                        </div>
+                        <svg class="icon-lg text-green-600" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="6"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Total Exclusivas</p>
+                            <p id="totalExclusivas" class="text-2xl font-bold text-purple-600">0</p>
+                        </div>
+                        <svg class="icon-lg text-purple-600" viewBox="0 0 24 24">
+                            <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm font-medium text-gray-600">Próximos Pagos</p>
+                            <p id="proximosPagos" class="text-2xl font-bold text-orange-600">0</p>
+                        </div>
+                        <svg class="icon-lg text-orange-600" viewBox="0 0 24 24">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initial data
+        let members = [
+            {
+                id: 1,
+                nombre: "ARLETTE CARBAJAL CUEVA",
+                ingreso: "2025-03-06",
+                fechaPago: "2025-07-01",
+                maduresParaTarea: "Control",
+                ladosPorMes: 0.33,
+                marzo: 0,
+                abril: 0,
+                mayo: 2,
+                junio: 0,
+                captaciones: 2,
+                exclusiva: 1,
+                abiertos: 1,
+                ladosColocacion: 1,
+                ladosCaptacion: 0
+            },
+            {
+                id: 2,
+                nombre: "JEFFERSON ALEXANDER RUIZ VELASQUEZ",
+                ingreso: "2025-03-24",
+                fechaPago: "2025-07-01",
+                maduresParaTarea: "Control",
+                ladosPorMes: 0.33,
+                marzo: 0,
+                abril: 3,
+                mayo: 2,
+                junio: 1,
+                captaciones: 6,
+                exclusiva: 6,
+                abiertos: 0,
+                ladosColocacion: 0,
+                ladosCaptacion: 1
+            },
+            {
+                id: 3,
+                nombre: "MILTON CASTILLO VASQUEZ",
+                ingreso: "2025-03-13",
+                fechaPago: "2025-07-01",
+                maduresParaTarea: "Control",
+                ladosPorMes: 0.33,
+                marzo: 0,
+                abril: 0,
+                mayo: 1,
+                junio: 1,
+                captaciones: 2,
+                exclusiva: 2,
+                abiertos: 0,
+                ladosColocacion: 1,
+                ladosCaptacion: 1
+            },
+            {
+                id: 4,
+                nombre: "DUNCAN MAESTRE DUCESE",
+                ingreso: "2024-09-23",
+                fechaPago: "2025-01-01",
+                maduresParaTarea: "Delegación",
+                ladosPorMes: 3,
+                marzo: 0,
+                abril: 2,
+                mayo: 5,
+                junio: 0,
+                captaciones: 8,
+                exclusiva: 7,
+                abiertos: 1,
+                ladosColocacion: 3,
+                ladosCaptacion: 4
+            },
+            {
+                id: 5,
+                nombre: "KATHERINE ROJAS SOSA",
+                ingreso: "2025-04-28",
+                fechaPago: "2025-08-01",
+                maduresParaTarea: "Delegación",
+                ladosPorMes: 3,
+                marzo: 0,
+                abril: 0,
+                mayo: 5,
+                junio: 3,
+                captaciones: 8,
+                exclusiva: 6,
+                abiertos: 2,
+                ladosColocacion: 2,
+                ladosCaptacion: 3
+            },
+            {
+                id: 6,
+                nombre: "MARIA PIA FIGUEROA HERRERA",
+                ingreso: "2024-10-14",
+                fechaPago: "2025-07-01",
+                maduresParaTarea: "Seguimiento",
+                ladosPorMes: 0.5,
+                marzo: 0,
+                abril: 0,
+                mayo: 1,
+                junio: 1,
+                captaciones: 1,
+                exclusiva: 2,
+                abiertos: 0,
+                ladosColocacion: 1,
+                ladosCaptacion: 3
+            }
+        ];
+
+        let editingId = null;
+
+        // Utility functions
+        function calculateDaysUntilPayment(fechaPago) {
+            const today = new Date();
+            const payDate = new Date(fechaPago);
+            const diffTime = payDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function calculateTotals(member) {
+            const totalMeses = member.marzo + member.abril + member.mayo + member.junio;
+            const totalGeneral = member.captaciones + member.exclusiva + member.abiertos + 
+                                member.ladosColocacion + member.ladosCaptacion;
+            return { totalMeses, totalGeneral };
+        }
+
+        function getStatusColor(madures) {
+            switch(madures) {
+                case 'Control': return 'bg-red-100 text-red-800';
+                case 'Delegación': return 'bg-blue-100 text-blue-800';
+                case 'Seguimiento': return 'bg-green-100 text-green-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString('es-ES');
+        }
+
+        function createEditableCell(value, onSave, type = 'text', options = null) {
+            if (options) {
+                let select = document.createElement('select');
+                select.className = 'w-full p-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 editable-cell';
+                select.value = value;
+                
+                options.forEach(option => {
+                    let optionElement = document.createElement('option');
+                    optionElement.value = option;
+                    optionElement.textContent = option;
+                    select.appendChild(optionElement);
+                });
+                
+                select.addEventListener('blur', () => onSave(select.value));
+                select.addEventListener('change', () => onSave(select.value));
+                
+                return select;
+            }
+            
+            let input = document.createElement('input');
+            input.type = type;
+            input.value = value;
+            input.className = 'w-full p-1 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 editable-cell';
+            
+            input.addEventListener('blur', () => {
+                const newValue = type === 'number' ? parseFloat(input.value) || 0 : input.value;
+                onSave(newValue);
+            });
+            
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    input.blur();
+                }
+            });
+            
+            return input;
+        }
+
+        function updateMember(id, field, value) {
+            const memberIndex = members.findIndex(m => m.id === id);
+            if (memberIndex !== -1) {
+                members[memberIndex][field] = value;
+                renderTable();
+                updateSummaryCards();
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('membersTableBody');
+            tbody.innerHTML = '';
+
+            members.forEach((member, index) => {
+                const daysUntilPayment = calculateDaysUntilPayment(member.fechaPago);
+                const { totalMeses, totalGeneral } = calculateTotals(member);
+                const isEditing = editingId === member.id;
+
+                const row = document.createElement('tr');
+                row.className = `${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} hover:bg-blue-50 transition-colors`;
+
+                // Nombre
+                const nameCell = document.createElement('td');
+                nameCell.className = 'p-3 font-medium text-gray-800 name-cell';
+                if (isEditing) {
+                    nameCell.appendChild(createEditableCell(member.nombre, (value) => updateMember(member.id, 'nombre', value)));
+                } else {
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'truncate';
+                    nameDiv.textContent = member.nombre;
+                    nameDiv.title = member.nombre;
+                    nameCell.appendChild(nameDiv);
+                }
+                row.appendChild(nameCell);
+
+                // Ingreso
+                const ingresoCell = document.createElement('td');
+                ingresoCell.className = 'p-3 text-center';
+                if (isEditing) {
+                    ingresoCell.appendChild(createEditableCell(member.ingreso, (value) => updateMember(member.id, 'ingreso', value), 'date'));
+                } else {
+                    ingresoCell.textContent = formatDate(member.ingreso);
+                }
+                row.appendChild(ingresoCell);
+
+                // Fecha Pago
+                const fechaPagoCell = document.createElement('td');
+                fechaPagoCell.className = 'p-3 text-center';
+                if (isEditing) {
+                    fechaPagoCell.appendChild(createEditableCell(member.fechaPago, (value) => updateMember(member.id, 'fechaPago', value), 'date'));
+                } else {
+                    fechaPagoCell.textContent = formatDate(member.fechaPago);
+                }
+                row.appendChild(fechaPagoCell);
+
+                // Días para pago
+                const diasPagoCell = document.createElement('td');
+                diasPagoCell.className = 'p-3 text-center';
+                const diasSpan = document.createElement('span');
+                diasSpan.className = `px-2 py-1 rounded-full text-xs font-medium ${
+                    daysUntilPayment < 0 ? 'bg-red-100 text-red-800' :
+                    daysUntilPayment < 7 ? 'bg-yellow-100 text-yellow-800' :
+                    'bg-green-100 text-green-800'
+                }`;
+                diasSpan.textContent = daysUntilPayment < 0 ? `${Math.abs(daysUntilPayment)} días vencido` :
+                                     daysUntilPayment === 0 ? 'Hoy' :
+                                     `${daysUntilPayment} días`;
+                diasPagoCell.appendChild(diasSpan);
+                row.appendChild(diasPagoCell);
+
+                // Madurez
+                const maduresCell = document.createElement('td');
+                maduresCell.className = 'p-3 text-center';
+                if (isEditing) {
+                    maduresCell.appendChild(createEditableCell(member.maduresParaTarea, (value) => updateMember(member.id, 'maduresParaTarea', value), 'text', ['Control', 'Delegación', 'Seguimiento']));
+                } else {
+                    const maduresSpan = document.createElement('span');
+                    maduresSpan.className = `px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(member.maduresParaTarea)}`;
+                    maduresSpan.textContent = member.maduresParaTarea;
+                    maduresCell.appendChild(maduresSpan);
+                }
+                row.appendChild(maduresCell);
+
+                // Lados por mes
+                const ladosCell = document.createElement('td');
+                ladosCell.className = 'p-3 text-center';
+                if (isEditing) {
+                    ladosCell.appendChild(createEditableCell(member.ladosPorMes, (value) => updateMember(member.id, 'ladosPorMes', value), 'number'));
+                } else {
+                    ladosCell.textContent = member.ladosPorMes;
+                }
+                row.appendChild(ladosCell);
+
+                // Meses (Marzo, Abril, Mayo, Junio)
+                ['marzo', 'abril', 'mayo', 'junio'].forEach(mes => {
+                    const mesCell = document.createElement('td');
+                    mesCell.className = 'p-3 text-center bg-yellow-50';
+                    if (isEditing) {
+                        mesCell.appendChild(createEditableCell(member[mes], (value) => updateMember(member.id, mes, value), 'number'));
+                    } else {
+                        const mesSpan = document.createElement('span');
+                        mesSpan.className = 'font-semibold text-yellow-700';
+                        mesSpan.textContent = member[mes];
+                        mesCell.appendChild(mesSpan);
+                    }
+                    row.appendChild(mesCell);
+                });
+
+                // Métricas (Captaciones, Exclusiva, Abiertos)
+                ['captaciones', 'exclusiva', 'abiertos'].forEach(metric => {
+                    const metricCell = document.createElement('td');
+                    metricCell.className = 'p-3 text-center bg-green-50';
+                    if (isEditing) {
+                        metricCell.appendChild(createEditableCell(member[metric], (value) => updateMember(member.id, metric, value), 'number'));
+                    } else {
+                        const metricSpan = document.createElement('span');
+                        metricSpan.className = 'font-semibold text-green-700';
+                        metricSpan.textContent = member[metric];
+                        metricCell.appendChild(metricSpan);
+                    }
+                    row.appendChild(metricCell);
+                });
+
+                // Lados (Colocación, Captación)
+                ['ladosColocacion', 'ladosCaptacion'].forEach(metric => {
+                    const metricCell = document.createElement('td');
+                    metricCell.className = 'p-3 text-center bg-purple-50';
+                    if (isEditing) {
+                        metricCell.appendChild(createEditableCell(member[metric], (value) => updateMember(member.id, metric, value), 'number'));
+                    } else {
+                        const metricSpan = document.createElement('span');
+                        metricSpan.className = 'font-semibold text-purple-700';
+                        metricSpan.textContent = member[metric];
+                        metricCell.appendChild(metricSpan);
+                    }
+                    row.appendChild(metricCell);
+                });
+
+                // Total Meses
+                const totalMesesCell = document.createElement('td');
+                totalMesesCell.className = 'p-3 text-center bg-red-50';
+                const totalMesesSpan = document.createElement('span');
+                totalMesesSpan.className = 'font-bold text-red-700';
+                totalMesesSpan.textContent = totalMeses;
+                totalMesesCell.appendChild(totalMesesSpan);
+                row.appendChild(totalMesesCell);
+
+                // Total General
+                const totalGeneralCell = document.createElement('td');
+                totalGeneralCell.className = 'p-3 text-center bg-red-50';
+                const totalGeneralSpan = document.createElement('span');
+                totalGeneralSpan.className = 'font-bold text-red-700';
+                totalGeneralSpan.textContent = totalGeneral;
+                totalGeneralCell.appendChild(totalGeneralSpan);
+                row.appendChild(totalGeneralCell);
+
+                // Acciones
+                const actionsCell = document.createElement('td');
+                actionsCell.className = 'p-3 text-center';
+                
+                if (isEditing) {
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'flex justify-center gap-1';
+                    
+                    const saveBtn = document.createElement('button');
+                    saveBtn.className = 'bg-green-500 hover:bg-green-600 text-white p-1 rounded transition-colors';
+                    saveBtn.innerHTML = `<svg class="icon" viewBox="0 0 24 24">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17,21 17,13 7,13 7,21"></polyline>
+                        <polyline points="7,3 7,8 15,8"></polyline>
+                    </svg>`;
+                    saveBtn.addEventListener('click', () => {
+                        editingId = null;
+                        renderTable();
+                    });
+                    
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.className = 'bg-gray-500 hover:bg-gray-600 text-white p-1 rounded transition-colors';
+                    cancelBtn.innerHTML = `<svg class="icon" viewBox="0 0 24 24">
+                        <path d="M18 6 6 18"></path>
+                        <path d="M6 6l12 12"></path>
+                    </svg>`;
+                    cancelBtn.addEventListener('click', () => {
+                        editingId = null;
+                        renderTable();
+                    });
+                    
+                    actionsDiv.appendChild(saveBtn);
+                    actionsDiv.appendChild(cancelBtn);
+                    actionsCell.appendChild(actionsDiv);
+                } else {
+                    const editBtn = document.createElement('button');
+                    editBtn.className = 'bg-blue-500 hover:bg-blue-600 text-white p-1 rounded transition-colors';
+                    editBtn.innerHTML = `<svg class="icon" viewBox="0 0 24 24">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>`;
+                    editBtn.addEventListener('click', () => {
+                        editingId = member.id;
+                        renderTable();
+                    });
+                    actionsCell.appendChild(editBtn);
+                }
+                
+                row.appendChild(actionsCell);
+                tbody.appendChild(row);
+            });
+        }
+
+        function updateSummaryCards() {
+            document.getElementById('totalMembers').textContent = members.length;
+            
+            const totalCaptaciones = members.reduce((sum, member) => sum + member.captaciones, 0);
+            document.getElementById('totalCaptaciones').textContent = totalCaptaciones;
+            
+            const totalExclusivas = members.reduce((sum, member) => sum + member.exclusiva, 0);
+            document.getElementById('totalExclusivas').textContent = totalExclusivas;
+            
+            const proximosPagos = members.filter(member => {
+                const days = calculateDaysUntilPayment(member.fechaPago);
+                return days <= 7 && days >= 0;
+            }).length;
+            document.getElementById('proximosPagos').textContent = proximosPagos;
+        }
+
+        function addNewMember() {
+            const nombre = document.getElementById('newNombre').value.trim();
+            const ingreso = document.getElementById('newIngreso').value;
+            const fechaPago = document.getElementById('newFechaPago').value;
+            const madures = document.getElementById('newMadures').value;
+            const ladosPorMes = parseFloat(document.getElementById('newLadosPorMes').value) || 0.33;
+
+            if (nombre && ingreso && fechaPago) {
+                const newId = Math.max(...members.map(m => m.id)) + 1;
+                const newMember = {
+                    id: newId,
+                    nombre: nombre,
+                    ingreso: ingreso,
+                    fechaPago: fechaPago,
+                    maduresParaTarea: madures,
+                    ladosPorMes: ladosPorMes,
+                    marzo: 0,
+                    abril: 0,
+                    mayo: 0,
+                    junio: 0,
+                    captaciones: 0,
+                    exclusiva: 0,
+                    abiertos: 0,
+                    ladosColocacion: 0,
+                    ladosCaptacion: 0
+                };
+
+                members.push(newMember);
+                
+                // Reset form
+                document.getElementById('newNombre').value = '';
+                document.getElementById('newIngreso').value = '';
+                document.getElementById('newFechaPago').value = '';
+                document.getElementById('newMadures').value = 'Control';
+                document.getElementById('newLadosPorMes').value = '0.33';
+                
+                // Hide form
+                document.getElementById('addMemberForm').classList.add('hidden');
+                
+                // Update display
+                renderTable();
+                updateSummaryCards();
+            } else {
+                alert('Por favor complete todos los campos obligatorios: Nombre, Fecha de Ingreso y Fecha de Pago.');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('addMemberBtn').addEventListener('click', () => {
+            document.getElementById('addMemberForm').classList.remove('hidden');
+        });
+
+        document.getElementById('saveNewMember').addEventListener('click', addNewMember);
+
+        document.getElementById('cancelNewMember').addEventListener('click', () => {
+            document.getElementById('addMemberForm').classList.add('hidden');
+            // Reset form
+            document.getElementById('newNombre').value = '';
+            document.getElementById('newIngreso').value = '';
+            document.getElementById('newFechaPago').value = '';
+            document.getElementById('newMadures').value = 'Control';
+            document.getElementById('newLadosPorMes').value = '0.33';
+        });
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+            updateSummaryCards();
+        });
+    
+function exportarCSV() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const filas = members.map(m => [
+        `"${m.nombre}"`, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ].join(','));
+
+    const csvContent = [encabezados.join(','), ...filas].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'seguimiento_equipo.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+
+function abrirModoLector() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const rows = members.map(m => [
+        m.nombre, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ]);
+
+    const tableHTML = `
+        <html>
+        <head>
+            <title>Vista de Datos - Solo Lectura</title>
+            <style>
+                body { font-family: sans-serif; padding: 2rem; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                th { background-color: #f0f0f0; }
+            </style>
+        </head>
+        <body>
+            <h2>Vista de Datos del Equipo</h2>
+            <table>
+                <thead><tr>${encabezados.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(r => `<tr>${r.map(d => `<td>${d}</td>`).join('')}</tr>`).join('')}</tbody>
+            </table>
+        </body>
+        </html>
+    `;
+    const newWin = window.open();
+    newWin.document.write(tableHTML);
+    newWin.document.close();
+}
+
+function abrirModoEditable() {
+    const encabezados = [
+        "Nombre", "Ingreso", "Fecha Pago", "Madurez", "Lados/Mes",
+        "Marzo", "Abril", "Mayo", "Junio",
+        "Captaciones", "Exclusiva", "Abiertos",
+        "L. Colocación", "L. Captación"
+    ];
+
+    const rows = members.map(m => [
+        m.nombre, m.ingreso, m.fechaPago, m.maduresParaTarea, m.ladosPorMes,
+        m.marzo, m.abril, m.mayo, m.junio,
+        m.captaciones, m.exclusiva, m.abiertos,
+        m.ladosColocacion, m.ladosCaptacion
+    ]);
+
+    const tableHTML = `
+        <html>
+        <head>
+            <title>Modo Editable - Seguimiento de Equipo</title>
+            <style>
+                body { font-family: sans-serif; padding: 2rem; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+                th { background-color: #e0f7fa; }
+                input { width: 100%; border: none; text-align: center; }
+            </style>
+        </head>
+        <body>
+            <h2>Modo Editable</h2>
+            <table>
+                <thead><tr>${encabezados.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+                <tbody>${rows.map(r => `<tr>${r.map(d => `<td><input value="${d}"></td>`).join('')}</tr>`).join('')}</tbody>
+            </table>
+        </body>
+        </html>
+    `;
+    const newWin = window.open();
+    newWin.document.write(tableHTML);
+    newWin.document.close();
+}
+
+
+function verModoLectura() {
+    let ventana = window.open('', '_blank');
+    let tabla = '<table border="1" style="width:100%; border-collapse:collapse; font-family:sans-serif; font-size:14px;">';
+    tabla += `<thead><tr>
+        <th>Nombre</th><th>Ingreso</th><th>Fecha Pago</th><th>Madurez</th><th>Lados/Mes</th>
+        <th>Marzo</th><th>Abril</th><th>Mayo</th><th>Junio</th>
+        <th>Captaciones</th><th>Exclusiva</th><th>Abiertos</th>
+        <th>L. Colocación</th><th>L. Captación</th>
+    </tr></thead><tbody>`;
+
+    members.forEach(m => {
+        tabla += `<tr>
+            <td>${m.nombre}</td>
+            <td>${m.ingreso}</td>
+            <td>${m.fechaPago}</td>
+            <td>${m.maduresParaTarea}</td>
+            <td>${m.ladosPorMes}</td>
+            <td>${m.marzo}</td>
+            <td>${m.abril}</td>
+            <td>${m.mayo}</td>
+            <td>${m.junio}</td>
+            <td>${m.captaciones}</td>
+            <td>${m.exclusiva}</td>
+            <td>${m.abiertos}</td>
+            <td>${m.ladosColocacion}</td>
+            <td>${m.ladosCaptacion}</td>
+        </tr>`;
+    });
+
+    tabla += '</tbody></table>';
+
+    ventana.document.write(`<html><head><title>Modo Lector</title></head><body><h2>Vista de Datos del Equipo</h2>${tabla}</body></html>`);
+    ventana.document.close();
+}
+
+</script>
+</body>
+</html>
